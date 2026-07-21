@@ -24,7 +24,7 @@ class Session {
     std::unique_ptr<Display> m_display;
     Pacing m_pacing;
 
-    std::vector<Token> m_token;
+    std::vector<Token> m_tokens;
     std::size_t m_currentIndex = 0;
     bool m_paused = false;
 

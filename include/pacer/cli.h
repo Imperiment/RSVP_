@@ -11,5 +11,5 @@ struct CliOptions {
 
 class Cli {
   public:
-    static CliOptions parse(int arc, char **argv);
+    static CliOptions parse(int argc, char **argv);
 };

@@ -1,4 +1,3 @@
-#pragma once
 #include "pacer/pacing.h"
 #include <algorithm>
 #include <chrono>
