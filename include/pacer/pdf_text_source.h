@@ -3,7 +3,7 @@
 
 class PdfTextSource : public TextSource {
   public:
-    explicit PdfTextSource(const std::string &filePath);
+    explicit PdfTextSource(std::string filePath);
 
     [[nodiscard]] std::string extractText() const override;
 
