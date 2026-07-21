@@ -8,7 +8,7 @@ class TerminalDisplay : public Display {
 
     void init() override;
     void shutdown() override;
-    void showWord(const std::string &word) override;
+    void showWord(const WordDisplayState &state) override;
 
     UserAction pollInput() override;
 };

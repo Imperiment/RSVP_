@@ -27,16 +27,23 @@ void Session::run() {
             break;
         }
 
+        const Token &token = m_tokens[m_currentIndex];
+
+        WordDisplayState state;
+        state.word = token.text;
+        state.currentIndex = m_currentIndex + 1;
+        state.totalWords = m_tokens.size();
+        state.wordsPerMinute = m_pacing.wordsPerMinute();
+        state.paused = m_paused;
+
+        m_display->showWord(state);
+
         if (m_paused) {
             std::this_thread::sleep_for(std::chrono::milliseconds(SLEEP_DURATION));
             continue;
         }
 
-        const Token &token = m_tokens[m_currentIndex];
-        m_display->showWord(token.text);
-
         std::this_thread::sleep_for(m_pacing.delayFor(token));
-
         ++m_currentIndex;
     }
 
