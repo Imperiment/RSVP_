@@ -4,19 +4,23 @@
 #include "pacer/text_source.h"
 #include "pacer/tokenizer.h"
 #include <chrono>
+#include <cstddef>
 #include <memory>
 #include <vector>
 
 class Session {
   public:
     Session(std::unique_ptr<TextSource> source, std::unique_ptr<Display> display,
-            int wordsPerMinute);
+            int wordsPerMinute, std::size_t startIndex = 0);
 
     void run();
 
+    [[nodiscard]] std::size_t currentWordIndex() const;
+
+    [[nodiscard]] std::size_t totalWords() const;
+
   private:
     bool handleInput(UserAction action);
-
     void rewind(std::chrono::milliseconds duration);
     void fastForward(std::chrono::milliseconds duration);
 

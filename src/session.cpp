@@ -2,13 +2,14 @@
 #include <algorithm>
 #include <thread>
 
+constexpr int BASIC_WPM = 50;
+constexpr int BUMP_WPM = 25;
 constexpr int SLEEP_DURATION = 50;
-constexpr int SPEED_FLOOR = 50;
-constexpr int WPM_BUMP = 25;
 
 Session::Session(std::unique_ptr<TextSource> source, std::unique_ptr<Display> display,
-                 int wordsPerMinute)
-    : m_source(std::move(source)), m_display(std::move(display)), m_pacing(wordsPerMinute) {
+                 int wordsPerMinute, std::size_t startIndex)
+    : m_source(std::move(source)), m_display(std::move(display)), m_pacing(wordsPerMinute),
+      m_currentIndex(startIndex) {
 }
 
 void Session::run() {
@@ -17,6 +18,10 @@ void Session::run() {
 
     if (m_tokens.empty()) {
         return;
+    }
+
+    if (m_currentIndex >= m_tokens.size()) {
+        m_currentIndex = m_tokens.size() - 1;
     }
 
     m_display->init();
@@ -50,41 +55,41 @@ void Session::run() {
     m_display->shutdown();
 }
 
+std::size_t Session::currentWordIndex() const {
+    return m_currentIndex;
+}
+
+std::size_t Session::totalWords() const {
+    return m_tokens.size();
+}
+
 bool Session::handleInput(UserAction action) {
     switch (action) {
     case UserAction::Quit:
         return false;
-
     case UserAction::Pause:
         m_paused = !m_paused;
         break;
-
     case UserAction::Resume:
         m_paused = false;
         break;
-
     case UserAction::SpeedUp:
-        m_pacing.setWordsPerMinute(m_pacing.wordsPerMinute() + WPM_BUMP);
+        m_pacing.setWordsPerMinute(m_pacing.wordsPerMinute() + BUMP_WPM);
         break;
-
     case UserAction::SlowDown:
-        m_pacing.setWordsPerMinute(std::max(SPEED_FLOOR, m_pacing.wordsPerMinute() - WPM_BUMP));
+        m_pacing.setWordsPerMinute(std::max(BASIC_WPM, m_pacing.wordsPerMinute() - BUMP_WPM));
         break;
-
     case UserAction::Rewind:
         rewind(kSeekDuration);
         m_paused = true;
         break;
-
     case UserAction::FastForward:
         fastForward(kSeekDuration);
         break;
-
     case UserAction::None:
     default:
         break;
     }
-
     return true;
 }
 
