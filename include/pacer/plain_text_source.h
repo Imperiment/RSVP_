@@ -3,7 +3,7 @@
 
 class PlainTextSource : public TextSource {
   public:
-    explicit PlainTextSource(const std::string &filePath);
+    explicit PlainTextSource(std::string filePath);
     [[nodiscard]] std::string extractText() const override;
 
   private:
