@@ -1,5 +1,5 @@
 #pragma once
-#include "display.h"
+#include "pacer/display.h"
 
 class TerminalDisplay : public Display {
   public:

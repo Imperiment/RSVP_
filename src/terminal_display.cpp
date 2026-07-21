@@ -1,4 +1,4 @@
-#include "../include/pacer/terminal_display.h"
+#include "pacer/terminal_display.h"
 #include <ncurses.h>
 
 TerminalDisplay::TerminalDisplay() = default;

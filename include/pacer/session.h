@@ -1,8 +1,8 @@
 #pragma once
-#include "display.h"
-#include "pacing.h"
-#include "text_source.h"
-#include "tokenizer.h"
+#include "pacer/display.h"
+#include "pacer/pacing.h"
+#include "pacer/text_source.h"
+#include "pacer/tokenizer.h"
 #include <chrono>
 #include <memory>
 #include <vector>

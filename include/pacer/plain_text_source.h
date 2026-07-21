@@ -1,5 +1,5 @@
 #pragma once
-#include "text_source.h"
+#include "pacer/text_source.h"
 
 class PlainTextSource : public TextSource {
   public:

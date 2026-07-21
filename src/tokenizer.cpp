@@ -1,5 +1,4 @@
-#include "../include/pacer/tokenizer.h"
-#include <cctype>
+#include "pacer/tokenizer.h"
 #include <sstream>
 
 namespace {

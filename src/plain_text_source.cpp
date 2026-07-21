@@ -1,4 +1,4 @@
-#include "../include/pacer/plain_text_source.h"
+#include "pacer/plain_text_source.h"
 #include <fstream>
 #include <sstream>
 #include <stdexcept>
