@@ -3,3 +3,4 @@
 /build
 .gitconfig
 compile_commands.json
+third_party/
