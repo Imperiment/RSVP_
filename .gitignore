@@ -2,3 +2,5 @@
 .clang-format
 /build
 .gitconfig
+pacer
+compile_commands.json
