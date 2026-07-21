@@ -1,0 +1,4 @@
+.clangd
+.clang-format
+/build
+.gitconfig
