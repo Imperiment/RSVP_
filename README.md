@@ -2,15 +2,6 @@
 
 A terminal-based RSVP (Rapid Serial Visual Presentation) reader. Flashes one word at a time at a configurable speed, so you can read faster than normal eye-scanning allows. Supports plain text and PDF input.
 
-## Features
-
-- Configurable reading speed (words per minute)
-- Automatic pacing adjustments for sentence/clause punctuation
-- Pause / resume
-- Time-based rewind and fast-forward (jump back/forward ~1 second's worth of words)
-- Live speed adjustment while reading
-- PDF and plain text (`.txt`, `.md`) support
-
 ## Requirements
 
 - A C++17 compiler (`g++` or `clang++`)
@@ -52,7 +43,7 @@ This produces a `pacer` binary in the project root.
 ## Usage
 
 ```bash
-./pacer <file> [--speed WPM] [--paused] [--resume] [--page] [--context]
+./pacer <file> [--speed WPM] [--paused] [--resume] [--page NUMBER] [--context]
 ```
 
 **Examples:**
@@ -81,29 +72,6 @@ Unit tests cover the tokenizer and pacing logic (pure functions, no I/O):
 ```bash
 make test
 ```
-
-## Project structure
-
-```
-reading-pacer/
-├── include/pacer/       # Public headers / interfaces
-├── src/                 # Implementation
-├── tests/               # Unit tests (doctest)
-├── third_party/         # Fetched header-only dependencies (CLI11, doctest)
-└── Makefile
-```
-
-### Architecture
-
-The pipeline is: **file → raw text → tokens → paced display loop**.
-
-- **`TextSource`** — abstract interface for extracting raw text from a file. Implementations: `PlainTextSource` (.txt/.md), `PdfTextSource` (.pdf, via poppler). Chosen automatically by file extension.
-- **`Tokenizer`** — splits raw text into `Token`s (word + punctuation metadata). Handles quoted/bracketed punctuation, common abbreviations (`Dr.`, `etc.`), and PDF line-break hyphenation (`exam-\nple` → `example`).
-- **`Pacing`** — pure logic converting words-per-minute into per-word delays, with longer pauses after sentence/clause-ending punctuation.
-- **`Display`** — abstract interface for rendering one word and polling input. Implementation: `TerminalDisplay` (ncurses).
-- **`Session`** — owns the main loop: pulls tokens, asks `Pacing` for timing, asks `Display` to render, and handles pause/rewind/speed input.
-
-Each interface is designed to be swapped independently — e.g., a future GUI display or an EPUB text source would only require a new implementation of `Display`/`TextSource`, with no changes elsewhere.
 
 ## Known limitations
 
