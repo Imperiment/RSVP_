@@ -24,6 +24,7 @@ void TerminalDisplay::init() {
         init_pair(1, COLOR_WHITE, COLOR_BLACK);  // main word
         init_pair(2, COLOR_YELLOW, COLOR_BLACK); // paused indicator
         init_pair(3, COLOR_CYAN, COLOR_BLACK);   // status line / help
+        init_pair(4, COLOR_WHITE, COLOR_BLACK);  // previous / next word
     }
 }
 
@@ -38,21 +39,44 @@ void TerminalDisplay::showWord(const WordDisplayState &state) {
     int cols;
     getmaxyx(stdscr, rows, cols);
 
-    clear();
+    erase();
+
+    const int wordRow = rows / 2;
+    const int anchorCol = cols / 2 - 6;
 
     // --- Main word ---
-    const int wordRow = rows / 2;
-    int wordCol = (cols - static_cast<int>(state.word.size())) / 2;
-    if (std::max(0, wordCol) == 0) {
-        wordCol = 0;
-    }
-
     if (has_colors()) {
         attron(COLOR_PAIR(1) | A_BOLD);
     }
-    mvprintw(wordRow, wordCol, "%s", state.word.c_str());
+    mvprintw(wordRow, anchorCol, "%s", state.word.c_str());
     if (has_colors()) {
         attroff(COLOR_PAIR(1) | A_BOLD);
+    }
+
+    // --- Previous word ---
+    if (!state.previousWord.empty()) {
+        const int prevCol = anchorCol - static_cast<int>(state.previousWord.size()) - 2;
+        if (prevCol >= 0) {
+            if (has_colors()) {
+                attron(COLOR_PAIR(4) | A_DIM);
+            }
+            mvprintw(wordRow, prevCol, "%s", state.previousWord.c_str());
+            if (has_colors()) {
+                attroff(COLOR_PAIR(4) | A_DIM);
+            }
+        }
+    }
+
+    // --- Next word ---
+    const int nextCol = anchorCol + 14;
+    if (!state.nextWord.empty() && nextCol + static_cast<int>(state.nextWord.size()) < cols) {
+        if (has_colors()) {
+            attron(COLOR_PAIR(4) | A_DIM);
+        }
+        mvprintw(wordRow, nextCol, "%s", state.nextWord.c_str());
+        if (has_colors()) {
+            attroff(COLOR_PAIR(4) | A_DIM);
+        }
     }
 
     // --- Progress line ---
@@ -91,7 +115,8 @@ void TerminalDisplay::showWord(const WordDisplayState &state) {
     }
 
     // --- Help line ---
-    const char *helpText = "[space] pause  [h/l] rewind/forward  [j/k] speed  [q] quit";
+    const char *helpText =
+        "[space] pause  [h/l] rewind/forward  [j/k] speed  [c] context  [q] quit";
     const int helpCol = std::max(0, (cols - static_cast<int>(std::string(helpText).size())) / 2);
     if (has_colors()) {
         attron(COLOR_PAIR(3));
@@ -125,6 +150,8 @@ UserAction TerminalDisplay::pollInput() {
     case 'l':
     case KEY_RIGHT:
         return UserAction::FastForward;
+    case 'c':
+        return UserAction::ToggleContext;
     default:
         return UserAction::None;
     }

@@ -11,7 +11,7 @@
 class Session {
   public:
     Session(std::unique_ptr<TextSource> source, std::unique_ptr<Display> display,
-            int wordsPerMinute, std::size_t startIndex = 0);
+            int wordsPerMinute, std::size_t startIndex = 0, bool showContext = false);
 
     void run();
 
@@ -31,6 +31,7 @@ class Session {
     std::vector<Token> m_tokens;
     std::size_t m_currentIndex = 0;
     bool m_paused = false;
+    bool m_showContext;
 
     static constexpr std::chrono::milliseconds kSeekDuration{1000};
 };

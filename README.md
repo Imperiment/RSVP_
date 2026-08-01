@@ -52,7 +52,7 @@ This produces a `pacer` binary in the project root.
 ## Usage
 
 ```bash
-./pacer <file> [--speed WPM] [--paused]
+./pacer <file> [--speed WPM] [--paused] [--resume] [--page] [--context]
 ```
 
 **Examples:**
@@ -71,6 +71,7 @@ This produces a `pacer` binary in the project root.
 | `l` / `→`      | Fast-forward ~1 second     |
 | `j` / `-`      | Slow down (−25 WPM)        |
 | `k` / `+`      | Speed up (+25 WPM)         |
+| `c`            | Toggle Context             |
 | `q`            | Quit                       |
 
 ## Running tests

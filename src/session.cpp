@@ -7,9 +7,9 @@ constexpr int BUMP_WPM = 25;
 constexpr int SLEEP_DURATION = 50;
 
 Session::Session(std::unique_ptr<TextSource> source, std::unique_ptr<Display> display,
-                 int wordsPerMinute, std::size_t startIndex)
+                 int wordsPerMinute, std::size_t startIndex, bool showContext)
     : m_source(std::move(source)), m_display(std::move(display)), m_pacing(wordsPerMinute),
-      m_currentIndex(startIndex) {
+      m_currentIndex(startIndex), m_showContext(showContext) {
 }
 
 void Session::run() {
@@ -36,6 +36,11 @@ void Session::run() {
 
         WordDisplayState state;
         state.word = token.text;
+        if (m_showContext) {
+            state.previousWord = (m_currentIndex > 0) ? m_tokens[m_currentIndex - 1].text : "";
+            state.nextWord =
+                (m_currentIndex + 1 < m_tokens.size()) ? m_tokens[m_currentIndex + 1].text : "";
+        }
         state.currentIndex = m_currentIndex + 1;
         state.totalWords = m_tokens.size();
         state.wordsPerMinute = m_pacing.wordsPerMinute();
@@ -85,6 +90,9 @@ bool Session::handleInput(UserAction action) {
         break;
     case UserAction::FastForward:
         fastForward(kSeekDuration);
+        break;
+    case UserAction::ToggleContext:
+        m_showContext = !m_showContext;
         break;
     case UserAction::None:
     default:

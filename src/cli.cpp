@@ -18,6 +18,9 @@ CliOptions Cli::parse(int argc, char **argv) {
 
     app.add_flag("--resume", options.resume, "Resume from saved progress for this file");
 
+    app.add_flag("-c, --context", options.showContext,
+                 "Show previous/next word alongside the current word.");
+
     try {
         app.parse(argc, argv);
     } catch (const CLI::ParseError &e) {

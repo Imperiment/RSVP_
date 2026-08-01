@@ -11,11 +11,14 @@ enum class UserAction : std::uint8_t {
     SpeedUp,
     SlowDown,
     Rewind,
-    FastForward
+    FastForward,
+    ToggleContext
 };
 
 struct WordDisplayState {
     std::string word;
+    std::string previousWord;
+    std::string nextWord;
     std::size_t currentIndex = 0;
     std::size_t totalWords = 0;
     int wordsPerMinute = 0;

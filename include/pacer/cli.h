@@ -10,6 +10,7 @@ struct CliOptions {
     bool startPaused = false;
     std::optional<int> startPage;
     bool resume = false;
+    bool showContext = false;
 };
 
 class Cli {
